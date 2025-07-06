@@ -20,12 +20,12 @@ export default function RadioPlayer() {
     
     // Camera
     const camera = new THREE.PerspectiveCamera(
-      75, 
+      45, 
       containerRef.current.clientWidth / containerRef.current.clientHeight, 
       0.1, 
       1000
     )
-    camera.position.set(0, 0.5, 2)
+    camera.position.set(0, 0.6, 2.5)
     
     // Renderer
     const renderer = new THREE.WebGLRenderer({ 
