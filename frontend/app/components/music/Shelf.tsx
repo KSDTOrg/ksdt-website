@@ -97,6 +97,11 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
     directionalLight.position.set(5, 5, 5)
     scene.add(directionalLight)
     
+    // Raycaster for hover detection
+    const raycaster = new THREE.Raycaster()
+    const pointer = new THREE.Vector2()
+    const albumMeshes: { mesh: THREE.Mesh; originalY: number; isHovered: boolean }[] = []
+    
     // Load and position albums side by side like ||||| (book spines)
     const loadAlbums = async () => {
       const albumSpacing = 0.05 // Very close together like book spines
@@ -120,6 +125,13 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
           // Rotate 90 degrees on Y axis to show like book spines
           albumMesh.rotation.y = Math.PI / 2
           
+          // Store reference to mesh with original position and hover state
+          albumMeshes.push({ 
+            mesh: albumMesh, 
+            originalY: albumMesh.position.y,
+            isHovered: false 
+          })
+          
           scene.add(albumMesh)
         } catch (error) {
           console.error(`Failed to load album ${albums[i].title}:`, error)
@@ -129,11 +141,56 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       setIsLoading(false)
     }
     
+    // Mouse move handler for hover detection
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!containerRef.current) return
+      
+      // Calculate pointer position in normalized device coordinates
+      const rect = containerRef.current.getBoundingClientRect()
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+      
+      // Set raycaster from camera and pointer
+      raycaster.setFromCamera(pointer, camera)
+      
+      // Calculate objects intersecting the picking ray
+      const meshes = albumMeshes.map(item => item.mesh)
+      const intersects = raycaster.intersectObjects(meshes)
+      
+      // Reset all hover states
+      albumMeshes.forEach(albumItem => {
+        albumItem.isHovered = false
+      })
+      
+      // Set hover state for intersected object
+      if (intersects.length > 0) {
+        const hoveredMesh = intersects[0].object
+        const albumItem = albumMeshes.find(item => item.mesh === hoveredMesh)
+        if (albumItem) {
+          albumItem.isHovered = true
+        }
+      }
+    }
+    
+    // Add mouse move event listener
+    containerRef.current.addEventListener('mousemove', handleMouseMove)
+    const currentContainer = containerRef.current
+    
     loadAlbums()
     
-    // Simple render loop - no rotation or movement
+    // Animation loop with hover effects
     const animate = () => {
       requestAnimationFrame(animate)
+      
+      // Animate hover effects
+      albumMeshes.forEach(albumItem => {
+        const targetY = albumItem.isHovered ? albumItem.originalY + 0.2 : albumItem.originalY
+        
+        // Smooth transition to target position
+        const lerpFactor = 0.1
+        albumItem.mesh.position.y += (targetY - albumItem.mesh.position.y) * lerpFactor
+      })
+      
       renderer.render(scene, camera)
     }
     
@@ -155,8 +212,11 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
     
     // Cleanup
     return () => {
-      if (containerRef.current && containerRef.current.contains(renderer.domElement)) {
-        containerRef.current.removeChild(renderer.domElement)
+      if (currentContainer) {
+        currentContainer.removeEventListener('mousemove', handleMouseMove)
+        if (currentContainer.contains(renderer.domElement)) {
+          currentContainer.removeChild(renderer.domElement)
+        }
       }
       window.removeEventListener('resize', handleResize)
       
@@ -186,7 +246,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       <div className="relative">
         <div 
           ref={containerRef} 
-          className="w-full h-[400px] bg-white rounded-lg overflow-hidden"
+          className="w-full h-[400px] bg-white rounded-lg overflow-hidden cursor-pointer"
         >
           {isLoading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10 z-10">
