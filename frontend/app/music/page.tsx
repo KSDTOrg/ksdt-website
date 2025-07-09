@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import RadioPlayerWrapper from '../components/music/RadioPlayerWrapper'
+import Shelf from '../components/music/Shelf'
 
 export const metadata: Metadata = {
   title: 'Music | KSDT Radio',
@@ -15,6 +16,11 @@ export default function MusicPage() {
       <div className="mb-16">
         <RadioPlayerWrapper />
       </div>
+      
+      {/* Featured Albums Section */}
+      <section className="mb-16">
+        <Shelf title="Featured Albums" showTitle={true} />
+      </section>
       
       {/* Additional content sections */}
       <section className="mb-16">

@@ -1,0 +1,201 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import * as THREE from 'three'
+import { createAlbumMesh } from './Album'
+
+// Album data structure
+interface AlbumData {
+  id: string;
+  coverUrl: string;
+  title: string;
+  artist: string;
+  link?: string;
+}
+
+// Sample album data featuring Conrad Ave's self-titled album
+const FEATURED_ALBUMS: AlbumData[] = [
+  {
+    id: '1',
+    coverUrl: 'conradave.png',
+    title: 'Conrad Ave',
+    artist: 'Conrad Ave',
+    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+  },
+  {
+    id: '2',
+    coverUrl: 'conradave.png',
+    title: 'Conrad Ave',
+    artist: 'Conrad Ave',
+    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+  },
+  {
+    id: '3',
+    coverUrl: 'conradave.png',
+    title: 'Conrad Ave',
+    artist: 'Conrad Ave',
+    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+  },
+  {
+    id: '4',
+    coverUrl: 'conradave.png',
+    title: 'Conrad Ave',
+    artist: 'Conrad Ave',
+    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+  },
+  {
+    id: '5',
+    coverUrl: 'conradave.png',
+    title: 'Conrad Ave',
+    artist: 'Conrad Ave',
+    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+  }
+];
+
+interface ShelfProps {
+  title?: string;
+  albums?: AlbumData[];
+  showTitle?: boolean;
+}
+
+export default function Shelf({ title = "Featured Albums", albums: propAlbums, showTitle = true }: ShelfProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [albums] = useState<AlbumData[]>(propAlbums || FEATURED_ALBUMS)
+  
+  useEffect(() => {
+    if (!containerRef.current) return
+    
+    // Set up scene
+    const scene = new THREE.Scene()
+    scene.background = new THREE.Color(0xffffff)
+    
+    // Camera
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      0.1,
+      1000
+    )
+    camera.position.set(0, 0, 3) // Closer view for book spine effect
+    
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    })
+    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
+    renderer.setPixelRatio(window.devicePixelRatio)
+    renderer.outputColorSpace = THREE.SRGBColorSpace
+    containerRef.current.appendChild(renderer.domElement)
+    
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5)
+    scene.add(ambientLight)
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+    directionalLight.position.set(5, 5, 5)
+    scene.add(directionalLight)
+    
+    // Load and position albums side by side like ||||| (book spines)
+    const loadAlbums = async () => {
+      const albumSpacing = 0.05 // Very close together like book spines
+      const startX = -(albums.length - 1) * albumSpacing / 2 // Center the group
+      
+      for (let i = 0; i < albums.length; i++) {
+        try {
+          const albumMesh = await createAlbumMesh({
+            coverUrl: albums[i].coverUrl,
+            title: albums[i].title,
+            artist: albums[i].artist,
+            link: albums[i].link,
+            position: {
+              x: startX + (i * albumSpacing),
+              y: 0,
+              z: 0
+            },
+            scale: 0.8
+          })
+          
+          // Rotate 90 degrees on Y axis to show like book spines
+          albumMesh.rotation.y = Math.PI / 2
+          
+          scene.add(albumMesh)
+        } catch (error) {
+          console.error(`Failed to load album ${albums[i].title}:`, error)
+        }
+      }
+      
+      setIsLoading(false)
+    }
+    
+    loadAlbums()
+    
+    // Simple render loop - no rotation or movement
+    const animate = () => {
+      requestAnimationFrame(animate)
+      renderer.render(scene, camera)
+    }
+    
+    animate()
+    
+    // Handle resize
+    const handleResize = () => {
+      if (!containerRef.current) return
+      
+      const width = containerRef.current.clientWidth
+      const height = containerRef.current.clientHeight
+      
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+      renderer.setSize(width, height)
+    }
+    
+    window.addEventListener('resize', handleResize)
+    
+    // Cleanup
+    return () => {
+      if (containerRef.current && containerRef.current.contains(renderer.domElement)) {
+        containerRef.current.removeChild(renderer.domElement)
+      }
+      window.removeEventListener('resize', handleResize)
+      
+      renderer.dispose()
+      
+      scene.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          if (object.geometry) object.geometry.dispose()
+          
+          if (object.material) {
+            if (Array.isArray(object.material)) {
+              object.material.forEach(material => material.dispose())
+            } else {
+              object.material.dispose()
+            }
+          }
+        }
+      })
+    }
+  }, [albums])
+  
+  return (
+    <div className="w-full mb-12">
+      {showTitle && title && (
+        <h2 className="text-2xl font-bold mb-6">{title}</h2>
+      )}
+      <div className="relative">
+        <div 
+          ref={containerRef} 
+          className="w-full h-[400px] bg-white rounded-lg overflow-hidden"
+        >
+          {isLoading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10 z-10">
+              <div className="w-12 h-12 border-t-2 border-white rounded-full animate-spin"></div>
+              <p className="text-white mt-2">Loading albums...</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
