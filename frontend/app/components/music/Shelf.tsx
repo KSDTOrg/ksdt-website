@@ -104,6 +104,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       mesh: THREE.Mesh; 
       originalY: number; 
       originalX: number;
+      originalZ: number;
       originalRotationY: number;
       isHovered: boolean;
       isSelected: boolean;
@@ -137,6 +138,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
             mesh: albumMesh, 
             originalY: albumMesh.position.y,
             originalX: albumMesh.position.x,
+            originalZ: albumMesh.position.z,
             originalRotationY: albumMesh.rotation.y,
             isHovered: false,
             isSelected: false
@@ -241,8 +243,9 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
         const hoverTargetY = albumItem.isHovered && !albumItem.isSelected ? 
           albumItem.originalY + 0.2 : albumItem.originalY
         
-        // Selection effect
-        const targetX = albumItem.isSelected ? albumItem.originalX + 0.8 : albumItem.originalX
+        // Selection effect - move to center front view
+        const targetX = albumItem.isSelected ? 0 : albumItem.originalX // Move to center (x = 0)
+        const targetZ = albumItem.isSelected ? 1 : 0 // Move forward in front of other albums
         const targetRotationY = albumItem.isSelected ? 0 : albumItem.originalRotationY
         const targetY = albumItem.isSelected ? albumItem.originalY : hoverTargetY
         
@@ -250,6 +253,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
         const lerpFactor = 0.1
         albumItem.mesh.position.y += (targetY - albumItem.mesh.position.y) * lerpFactor
         albumItem.mesh.position.x += (targetX - albumItem.mesh.position.x) * lerpFactor
+        albumItem.mesh.position.z += (targetZ - albumItem.mesh.position.z) * lerpFactor
         albumItem.mesh.rotation.y += (targetRotationY - albumItem.mesh.rotation.y) * lerpFactor
       })
       
