@@ -3,13 +3,13 @@
 /*
  * 3D Album Shelf Component with Performance Optimizations:
  * 
- * 1. Intersection Observer pattern for hover detection - only performs raycasting when mouse is over container
- * 2. Throttled mouse move events to ~60fps (16ms intervals) 
- * 3. Conditional rendering with needsUpdate flag and threshold-based updates
- * 4. Precise raycasting maintained for click handling
- * 5. Texture optimizations in Album component (disabled mipmaps, linear filtering)
- * 6. Object pooling for reusable Three.js objects
- * 7. Performance monitoring for frame time warnings
+ * 1. ✅ Throttled raycasting to ~60fps (16ms intervals) + Intersection Observer pattern
+ * 2. ✅ Conditional rendering with needsUpdate flag and threshold-based updates (0.001)
+ * 3. ✅ Object pooling for reusable Three.js objects (raycaster, pointer, tempVector)
+ * 4. ✅ Texture optimizations in Album component (disabled mipmaps, linear filtering)
+ * 5. ✅ Performance monitoring for frame time warnings (>20ms)
+ * 6. ✅ Precise raycasting maintained for click handling
+ * 7. ✅ Memory cleanup and proper disposal of Three.js resources
  */
 
 import { useEffect, useRef, useState } from 'react'
@@ -19,48 +19,98 @@ import { createAlbumMesh } from './Album'
 // Album data structure
 interface AlbumData {
   id: string;
-  coverUrl: string;
+  coverUrl?: string;    // Optional - can use local image
   title: string;
   artist: string;
   link?: string;
+  spotifyData?: {       // NEW: Spotify data option
+    artist: string;
+    album: string;
+  };
 }
 
-// Sample album data featuring Conrad Ave's self-titled album
+// Sample album data featuring both local and Spotify albums
 const FEATURED_ALBUMS: AlbumData[] = [
+  // // Option 1: Hardcoded local album
+  // {
+  //   id: '1',
+  //   coverUrl: 'conradave.png',
+  //   title: 'Conrad Ave',
+  //   artist: 'Conrad Ave',
+  //   link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+  // },
+  // // Option 2: Spotify API albums
+  // {
+  //   id: '2',
+  //   spotifyData: { artist: 'The Beatles', album: 'Abbey Road' },
+  //   title: 'Abbey Road',
+  //   artist: 'The Beatles'
+  // },
   {
     id: '1',
-    coverUrl: 'conradave.png',
+    spotifyData: { artist: 'Conrad Ave', album: 'Conrad Ave' },
     title: 'Conrad Ave',
-    artist: 'Conrad Ave',
-    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+    artist: 'Conrad Ave'
   },
   {
     id: '2',
-    coverUrl: 'conradave.png',
-    title: 'Conrad Ave',
-    artist: 'Conrad Ave',
-    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+    spotifyData: { artist: 'Threadbare', album: 'Dread & Drear' },
+    title: 'Threadbare',
+    artist: 'Dread & Drear'
   },
   {
     id: '3',
-    coverUrl: 'conradave.png',
-    title: 'Conrad Ave',
-    artist: 'Conrad Ave',
-    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+    spotifyData: { artist: 'driftwould', album: 'driftwould' },
+    title: 'driftwould',
+    artist: 'driftwould'
   },
   {
     id: '4',
-    coverUrl: 'conradave.png',
-    title: 'Conrad Ave',
-    artist: 'Conrad Ave',
-    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+    spotifyData: { artist: 'KAN KAN', album: 'two thousand and whatever' },
+    title: 'KAN KAN',
+    artist: 'two thousand and whatever'
   },
   {
     id: '5',
-    coverUrl: 'conradave.png',
-    title: 'Conrad Ave',
-    artist: 'Conrad Ave',
-    link: 'https://open.spotify.com/album/28rcgwlTKex131MR3ZoJH8?si=ucfFFlYaQVetqn2LWhTqOQ'
+    spotifyData: { artist: 'Garden Angel', album: 'Bastian' },
+    title: 'Garden Angel',
+    artist: 'Bastian'
+  },
+  {
+    id: '6',
+    spotifyData: { artist: 'Atariwept', album: 'I Heart Puppy Mills...' },
+    title: 'Atariwept',
+    artist: 'I Heart Puppy Mills...'
+  },
+  {
+    id: '7',
+    spotifyData: { artist: 'First Day Back', album: 'Forward' },
+    title: 'First Day Back',
+    artist: 'Forward'
+  },
+  {
+    id: '8',
+    spotifyData: { artist: 'Smother', album: "Stickin' Together" },
+    title: 'Smother',
+    artist: "Stickin' Together"
+  },
+  {
+    id: '9',
+    spotifyData: { artist: 'Year of the Dead Bird', album: "DJXQQ" },
+    title: 'Year of the Dead Bird',
+    artist: "DJXQQ"
+  },
+  {
+    id: '10',
+    spotifyData: { artist: 'petiole', album: "pallium" },
+    title: 'petiole',
+    artist: "pallium"
+  },
+  {
+    id: '11',
+    spotifyData: { artist: 'Anthers', album: "Pedigree Pig" },
+    title: 'Anthers',
+    artist: "Pedigree Pig"
   }
 ];
 
@@ -109,9 +159,10 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
     directionalLight.position.set(5, 5, 5)
     scene.add(directionalLight)
     
-    // Raycaster for hover and click detection
+    // OPTIMIZATION 3: Object pooling - create reusable objects once
     const raycaster = new THREE.Raycaster()
     const pointer = new THREE.Vector2()
+    const tempVector = new THREE.Vector3() // Reusable vector for calculations
     const albumMeshes: { 
       mesh: THREE.Mesh; 
       originalY: number; 
@@ -131,6 +182,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
         try {
           const albumMesh = await createAlbumMesh({
             coverUrl: albums[i].coverUrl,
+            spotifyData: albums[i].spotifyData, // NEW: Pass Spotify data
             title: albums[i].title,
             artist: albums[i].artist,
             link: albums[i].link,
@@ -165,9 +217,10 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       setIsLoading(false)
     }
     
-    // Intersection Observer for hover detection (performance optimization)
+    // OPTIMIZATION 1: Intersection Observer for hover detection + throttling
     let isHoveringContainer = false
     let lastMouseMove = 0
+    const MOUSE_THROTTLE_MS = 16 // ~60fps (16ms intervals)
     
     const handleMouseEnter = () => {
       isHoveringContainer = true
@@ -181,13 +234,13 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       })
     }
     
-    // Optimized mouse move handler with throttling
+    // OPTIMIZATION 1: Throttled mouse move handler
     const handleMouseMove = (event: MouseEvent) => {
       if (!containerRef.current || !isHoveringContainer) return
       
       // Throttle to ~60fps (16ms intervals)
       const now = performance.now()
-      if (now - lastMouseMove < 16) return
+      if (now - lastMouseMove < MOUSE_THROTTLE_MS) return
       lastMouseMove = now
       
       // Calculate pointer position in normalized device coordinates
@@ -275,10 +328,11 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
     
     loadAlbums()
     
-    // Animation loop with performance optimizations
-    let needsUpdate = false
+    // OPTIMIZATION 2: Conditional rendering with performance monitoring
+    let needsUpdate = true // Start with true for initial render
     let lastFrameTime = performance.now()
-    const threshold = 0.001
+    const ANIMATION_THRESHOLD = 0.001
+    const lerpFactor = 0.1
     
     const animate = () => {
       requestAnimationFrame(animate)
@@ -291,6 +345,8 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
         console.warn(`3D Shelf: Slow frame detected: ${frameTime.toFixed(2)}ms`)
       }
       
+      let frameNeedsUpdate = false
+      
       // Animate hover and selection effects
       albumMeshes.forEach(albumItem => {
         // Hover effect (only if not selected)
@@ -299,34 +355,31 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
         
         // Selection effect - move to center front view
         const targetX = albumItem.isSelected ? 0 : albumItem.originalX // Move to center (x = 0)
-        const targetZ = albumItem.isSelected ? 1 : 0 // Move forward in front of other albums
+        const targetZ = albumItem.isSelected ? 1 : albumItem.originalZ // Move forward in front of other albums
         const targetRotationY = albumItem.isSelected ? 0 : albumItem.originalRotationY
         const targetY = albumItem.isSelected ? albumItem.originalY : hoverTargetY
         
-        // Smooth transitions with conditional update tracking
-        const lerpFactor = 0.1
-        
-        // Check if updates are needed (threshold-based)
-        if (Math.abs(targetY - albumItem.mesh.position.y) > threshold) {
+        // OPTIMIZATION 2: Only update if changes exceed threshold
+        if (Math.abs(targetY - albumItem.mesh.position.y) > ANIMATION_THRESHOLD) {
           albumItem.mesh.position.y += (targetY - albumItem.mesh.position.y) * lerpFactor
-          needsUpdate = true
+          frameNeedsUpdate = true
         }
-        if (Math.abs(targetX - albumItem.mesh.position.x) > threshold) {
+        if (Math.abs(targetX - albumItem.mesh.position.x) > ANIMATION_THRESHOLD) {
           albumItem.mesh.position.x += (targetX - albumItem.mesh.position.x) * lerpFactor
-          needsUpdate = true
+          frameNeedsUpdate = true
         }
-        if (Math.abs(targetZ - albumItem.mesh.position.z) > threshold) {
+        if (Math.abs(targetZ - albumItem.mesh.position.z) > ANIMATION_THRESHOLD) {
           albumItem.mesh.position.z += (targetZ - albumItem.mesh.position.z) * lerpFactor
-          needsUpdate = true
+          frameNeedsUpdate = true
         }
-        if (Math.abs(targetRotationY - albumItem.mesh.rotation.y) > threshold) {
+        if (Math.abs(targetRotationY - albumItem.mesh.rotation.y) > ANIMATION_THRESHOLD) {
           albumItem.mesh.rotation.y += (targetRotationY - albumItem.mesh.rotation.y) * lerpFactor
-          needsUpdate = true
+          frameNeedsUpdate = true
         }
       })
       
-      // Only render if updates are needed
-      if (needsUpdate) {
+      // OPTIMIZATION 2: Only render when something actually changed
+      if (needsUpdate || frameNeedsUpdate) {
         renderer.render(scene, camera)
         needsUpdate = false
       }
@@ -349,6 +402,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       camera.aspect = width / height
       camera.updateProjectionMatrix()
       renderer.setSize(width, height)
+      needsUpdate = true // Force render on resize
     }
     
     window.addEventListener('resize', handleResize)
