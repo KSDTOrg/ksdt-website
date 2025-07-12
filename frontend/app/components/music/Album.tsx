@@ -200,12 +200,36 @@ export function createAlbumMesh({
         
         // Create materials for each side of the album
         const materials = [
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Right side
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Left side
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Top
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Bottom
-          new THREE.MeshStandardMaterial({ map: texture }), // Front (album cover)
-          new THREE.MeshStandardMaterial({ color: 0x222222 }) // Back
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Right side
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Left side
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Top
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Bottom
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Front (album cover)
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }) // Back
         ]
         
         // Create album mesh
@@ -260,12 +284,36 @@ export async function createAlbumMeshFromData({
         
         // Create materials for each side of the album
         const materials = [
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Right side
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Left side
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Top
-          new THREE.MeshStandardMaterial({ color: 0x111111 }), // Bottom
-          new THREE.MeshStandardMaterial({ map: texture }), // Front (album cover)
-          new THREE.MeshStandardMaterial({ color: 0x222222 }) // Back
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Right side
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Left side
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Top
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Bottom
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }), // Front (album cover)
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.0,
+            roughness: 0.1
+          }) // Back
         ];
         
         // Create album mesh
