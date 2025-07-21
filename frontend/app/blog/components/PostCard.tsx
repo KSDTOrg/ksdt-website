@@ -5,9 +5,10 @@ import { AllPostsQueryResult } from "@/sanity.types";
 
 interface PostCardProps {
   post: NonNullable<AllPostsQueryResult>[0];
+  isFeatured?: boolean;
 }
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, isFeatured = false }: PostCardProps) {
   const formattedDate = post.date 
     ? new Date(post.date).toLocaleDateString('en-US', {
         month: 'short',
@@ -32,6 +33,18 @@ export default function PostCard({ post }: PostCardProps) {
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
               <span className="text-gray-400 text-sm font-medium">No Image</span>
+            </div>
+          )}
+          
+          {/* Featured Tag */}
+          {isFeatured && (
+            <div className="absolute top-3 left-3">
+              <span 
+                className="text-white px-2 py-1 text-xs font-bold uppercase tracking-wide"
+                style={{ backgroundColor: '#bc2026' }}
+              >
+                FEATURED
+              </span>
             </div>
           )}
         </div>

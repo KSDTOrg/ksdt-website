@@ -81,8 +81,11 @@ export default async function Page() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 p-6 text-white">
                       <div className="mb-3">
-                        <span className="bg-white text-black px-2 py-1 text-xs font-bold uppercase tracking-wide">
-                          MUSIC
+                        <span 
+                          className="text-white px-2 py-1 text-xs font-bold uppercase tracking-wide"
+                          style={{ backgroundColor: '#bc2026' }}
+                        >
+                          FEATURED
                         </span>
                       </div>
                       <h2 className="text-xl font-bold leading-tight">
