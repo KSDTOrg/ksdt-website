@@ -41,8 +41,8 @@ export const aboutMe = defineType({
       name: 'bio',
       title: 'Bio',
       type: 'text',
-      validation: (Rule) => Rule.required().max(300),
-      description: 'A short bio about this person (max 300 characters)',
+      validation: (Rule) => Rule.required().max(30),
+      description: 'A short bio about this person (max 30 characters)',
     }),
   ],
   preview: {
