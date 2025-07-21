@@ -1,0 +1,33 @@
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('./AlteHaasGroteskRegular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Alte Haas Grotesk';
+  src: url('./AlteHaasGroteskBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Apply font to studio */
+body {
+  font-family: 'Alte Haas Grotesk', system-ui, sans-serif !important;
+}
+
+/* Apply to specific studio elements */
+[data-ui="Text"],
+[data-ui="Label"],
+[data-ui="Heading"],
+.sanity-ui,
+h1, h2, h3, h4, h5, h6,
+p, span, div,
+button,
+input,
+textarea {
+  font-family: 'Alte Haas Grotesk', system-ui, sans-serif !important;
+}

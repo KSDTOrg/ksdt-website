@@ -55,6 +55,29 @@ export default defineConfig({
 
   icon: Logo,
 
+  document: {
+    unstable_comments: {
+      enabled: true,
+    },
+  },
+
+  studio: {
+    components: {
+      layout: (props: any) => {
+        // Load custom fonts
+        if (typeof document !== 'undefined') {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = '/static/fonts.css';
+          if (!document.querySelector('link[href="/static/fonts.css"]')) {
+            document.head.appendChild(link);
+          }
+        }
+        return props.renderDefault(props);
+      },
+    },
+  },
+
   theme: customTheme,
 
   plugins: [

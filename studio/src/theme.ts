@@ -26,4 +26,7 @@ export const customTheme = buildLegacyTheme({
   '--main-navigation-color--inverted': '#ffffff',
   
   '--focus-color': '#bc2026',
+
+  // KSDT Brand Font
+  '--font-family-base': '"Alte Haas Grotesk", system-ui, sans-serif',
 })
