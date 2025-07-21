@@ -29,11 +29,11 @@ export const aboutMe = defineType({
       validation: (Rule) => Rule.required(),
       options: {
         list: [
-          {title: 'Media', value: 'media'},
-          {title: 'Computer Engineering', value: 'computer-engineering'},
+          {title: 'Media', value: 'Media'},
+          {title: 'Computer Engineering', value: 'Computer Engineering'},
           // Add more teams here later: 
-          // {title: 'Programming', value: 'programming'},
-          // {title: 'Events', value: 'events'},
+          // {title: 'Programming', value: 'Programming'},
+          // {title: 'Events', value: 'Events'},
         ],
       },
     }),

@@ -35,6 +35,49 @@ function renderSections(
   if (!page) {
     return null;
   }
+
+  // Group AboutMe blocks by team and render other blocks normally
+  const groupedSections: any[] = [];
+  const aboutMeGroups: { [team: string]: any[] } = {};
+  
+  pageBuilderSections.forEach((block: any, index: number) => {
+    if (block._type === 'aboutMe') {
+      // Clean team name by removing invisible characters
+      const cleanTeam = (block.team || 'Team').trim().replace(/[\u200B-\u200D\uFEFF\u202A-\u202E\u2060-\u206F]/g, '').replace(/[^\w\s-]/g, '');
+      if (!aboutMeGroups[cleanTeam]) {
+        aboutMeGroups[cleanTeam] = [];
+      }
+      aboutMeGroups[cleanTeam].push({ ...block, originalIndex: index, cleanTeam });
+    } else {
+      // Add any grouped AboutMe sections before this block
+      if (Object.keys(aboutMeGroups).length > 0) {
+        Object.entries(aboutMeGroups).forEach(([team, people]) => {
+          groupedSections.push({
+            _type: 'aboutMeGroup',
+            _key: `group-${team}`,
+            team,
+            people,
+          });
+        });
+        // Clear the groups after adding them
+        Object.keys(aboutMeGroups).forEach(key => delete aboutMeGroups[key]);
+      }
+      groupedSections.push({ ...block, originalIndex: index });
+    }
+  });
+
+  // Add any remaining AboutMe groups at the end
+  if (Object.keys(aboutMeGroups).length > 0) {
+    Object.entries(aboutMeGroups).forEach(([team, people]) => {
+      groupedSections.push({
+        _type: 'aboutMeGroup',
+        _key: `group-${team}`,
+        team,
+        people,
+      });
+    });
+  }
+
   return (
     <div
       data-sanity={dataAttr({
@@ -43,10 +86,10 @@ function renderSections(
         path: `pageBuilder`,
       }).toString()}
     >
-      {pageBuilderSections.map((block: any, index: number) => (
+      {groupedSections.map((block: any, index: number) => (
         <BlockRenderer
           key={block._key}
-          index={index}
+          index={block.originalIndex || index}
           block={block}
           pageId={page._id}
           pageType={page._type}
