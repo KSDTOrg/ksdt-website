@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function BookingPage() {
   return (
     <div className="bg-white min-h-screen">
-      <div className="pt-28 pb-16">
+      <div className="pt-20 pb-16">
         <div className="container mx-auto px-4">
           <div className="mb-12">
             <h1 className="text-4xl lg:text-6xl font-black text-black mb-4">
