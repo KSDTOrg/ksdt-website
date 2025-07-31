@@ -15,7 +15,9 @@ export default async function BlogPage() {
     <div className="bg-white min-h-screen">
       <div className="pt-20 pb-16">
         <div className="container mx-auto px-4">
-          <PostGrid posts={posts || []} />
+          <div className="pt-4">
+            <PostGrid posts={posts || []} />
+          </div>
         </div>
       </div>
     </div>
