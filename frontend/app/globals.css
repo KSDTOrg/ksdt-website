@@ -92,7 +92,30 @@ header.fixed {
   scrollbar-width: none;
 }
 
-/* Safari safe area handling for bottom navigation */
-.pb-safe {
-  padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+/* Modern viewport height handling for Safari mobile */
+:root {
+  --viewport-height: 100vh; /* Fallback variable for JS */
+}
+
+.min-h-screen {
+  min-height: 100vh; /* Fallback for older browsers */
+  min-height: var(--viewport-height); /* JS fallback */
+}
+
+@supports (min-height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh; /* Dynamic viewport height - accounts for Safari bar */
+  }
+}
+
+/* Full viewport height utility */
+.h-screen {
+  height: 100vh; /* Fallback */
+  height: var(--viewport-height); /* JS fallback */
+}
+
+@supports (height: 100dvh) {
+  .h-screen {
+    height: 100dvh; /* Dynamic viewport height */
+  }
 }

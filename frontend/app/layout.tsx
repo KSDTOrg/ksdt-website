@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import DraftModeToast from "@/app/components/DraftModeToast";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
+import ViewportHeightFix from "@/app/components/ViewportHeightFix";
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { settingsQuery } from "@/sanity/lib/queries";
@@ -81,6 +82,8 @@ export default async function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body>
+        {/* Fix Safari mobile viewport height issues */}
+        <ViewportHeightFix />
         {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
         <Toaster />
         {isDraftMode && (
@@ -94,7 +97,7 @@ export default async function RootLayout({
         <SanityLive onError={handleError} />
         <Header />
         <main className="">
-          <section className="min-h-screen pb-safe">{children}</section>
+          <section className="min-h-screen">{children}</section>
         </main>
         {/* <Footer /> */}
         <SpeedInsights />
