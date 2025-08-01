@@ -77,6 +77,13 @@ export const postQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug] [0] {
     content[]{
       ...,
+      _type == "block" => {
+        ...,
+        markDefs[]{
+          ...,
+          ${linkReference}
+        }
+      },
       _type == "contentBlock" => {
         _type,
         _key,

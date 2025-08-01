@@ -41,15 +41,7 @@ interface PostContentProps {
 export default function PostContent({ content }: PostContentProps) {
   if (!content?.length) return null;
   
-  // Check if this is old-style content (array of blocks without wrapper)
-  if (content[0]?._type === 'block') {
-    // This is old content structure, wrap it in a contentBlock
-    return (
-      <div className="prose prose-lg max-w-none">
-        <PortableText value={content as PortableTextBlock[]} />
-      </div>
-    );
-  }
+  // Don't do the old-style check anymore - handle each block individually
 
   const getSizeClasses = (size?: string) => {
     switch (size) {
@@ -85,6 +77,14 @@ export default function PostContent({ content }: PostContentProps) {
         const key = block._key || Math.random().toString(36).substring(7);
         
         switch (block._type) {
+          case 'block':
+            // Old format - direct block type (for backwards compatibility)
+            return (
+              <div key={key} className="prose prose-lg max-w-none">
+                <PortableText value={[block] as PortableTextBlock[]} />
+              </div>
+            );
+            
           case 'contentBlock':
             if (!block.content) return null;
             return (
