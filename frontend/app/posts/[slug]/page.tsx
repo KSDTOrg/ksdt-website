@@ -7,6 +7,7 @@ import Avatar from "@/app/components/Avatar";
 import CoverImage from "@/app/components/CoverImage";
 import { MorePosts } from "@/app/components/Posts";
 import PortableText from "@/app/components/PortableText";
+import PostContent from "@/app/components/PostContent";
 import { sanityFetch } from "@/sanity/lib/live";
 import { postPagesSlugs, postQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
@@ -96,10 +97,7 @@ export default async function PostPage(props: Props) {
                 )}
               </div>
               {post.content?.length && (
-                <PortableText
-                  className="max-w-2xl"
-                  value={post.content as PortableTextBlock[]}
-                />
+                <PostContent content={post.content} />
               )}
             </article>
           </div>

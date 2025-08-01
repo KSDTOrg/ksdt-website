@@ -76,12 +76,40 @@ export const morePostsQuery = defineQuery(`
 export const postQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug] [0] {
     content[]{
-    ...,
-    markDefs[]{
       ...,
-      ${linkReference}
-    }
-  },
+      _type == "contentBlock" => {
+        _type,
+        _key,
+        content[]{
+          ...,
+          markDefs[]{
+            ...,
+            ${linkReference}
+          }
+        }
+      },
+      _type == "imageBlock" => {
+        _type,
+        _key,
+        image,
+        alt,
+        caption,
+        size,
+        alignment
+      },
+      _type == "galleryBlock" => {
+        _type,
+        _key,
+        images[]{
+          _key,
+          asset,
+          alt,
+          caption
+        },
+        layout,
+        columns
+      }
+    },
     ${postFields}
   }
 `);
