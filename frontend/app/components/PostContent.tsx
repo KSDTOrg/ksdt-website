@@ -130,7 +130,12 @@ export default function PostContent({ content }: PostContentProps) {
               <div key={key} className="my-12">
                 {block.layout === 'grid' ? (
                   <div className={`grid ${columnClass} gap-4`}>
-                    {block.images?.map((image) => {
+                    {block.images?.map((image: {
+                      _key?: string;
+                      asset: any;
+                      alt: string;
+                      caption?: string;
+                    }) => {
                       const galleryImageUrl = image.asset ? urlForImage(image)?.url() : null;
                       if (!galleryImageUrl) return null;
                       
