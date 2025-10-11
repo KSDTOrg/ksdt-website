@@ -130,7 +130,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
     
     // Set up scene
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0xffffff)
+    scene.background = null // Transparent background
     
     // Camera
     const camera = new THREE.PerspectiveCamera(
@@ -146,10 +146,11 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
       antialias: true,
       alpha: true
     })
+    renderer.setClearColor(0x000000, 0) // Set clear color with 0 opacity for full transparency
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.outputColorSpace = THREE.SRGBColorSpace
-    
+
     // Remove shadows - keep only tone mapping for quality
     renderer.toneMapping = THREE.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.2
@@ -507,9 +508,9 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
         <h2 className="text-2xl font-bold mb-6">{title}</h2>
       )}
       <div className="relative">
-        <div 
-          ref={containerRef} 
-          className="w-full h-[400px] bg-white rounded-lg overflow-hidden cursor-pointer"
+        <div
+          ref={containerRef}
+          className="w-full h-[400px] rounded-lg overflow-hidden cursor-pointer"
         >
           {isLoading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10 z-10">

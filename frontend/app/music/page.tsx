@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 // import RadioPlayerWrapper from './components/RadioPlayerWrapper'
 import Shelf from './components/Shelf'
+import TwitchPlayer from './components/TwitchPlayer'
 
 export const metadata: Metadata = {
   title: 'Music | KSDT Radio',
@@ -17,9 +18,14 @@ export default function MusicPage() {
         <RadioPlayerWrapper />
       </div> */}
 
+      {/* Twitch Live Stream */}
+      <section className="fixed top-20 left-0 right-0 bottom-0 flex items-center justify-center z-0">
+        <TwitchPlayer />
+      </section>
+
       {/* Featured Albums Section */}
-      <section className="mb-16">
-        <Shelf title="Featured Albums" showTitle={true} />
+      <section className="relative z-10 mb-16" style={{ marginTop: 'calc(100vh - 5rem)' }}>
+        <Shelf showTitle={false} />
       </section>
     </div>
   )

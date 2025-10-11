@@ -17,7 +17,7 @@ export default function RadioPlayer() {
     
     // Set up scene
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0xffffff) // White background
+    scene.background = null // Transparent background
     
     // Add axes helper to the scene (global coordinate system)
     const sceneAxesHelper = new THREE.AxesHelper(2) // Size 2 units
@@ -34,14 +34,15 @@ export default function RadioPlayer() {
     camera.position.set(0, 0, 3) // Set camera at eye level (Y=0) instead of Y=0.70
     
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ 
+    const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true
     })
+    renderer.setClearColor(0x000000, 0) // Set clear color with 0 opacity for full transparency
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
     renderer.setPixelRatio(window.devicePixelRatio)
     renderer.outputColorSpace = THREE.SRGBColorSpace
-    renderer.shadowMap.enabled = false // Disable shadow mapping for clean white background
+    renderer.shadowMap.enabled = false
     containerRef.current.appendChild(renderer.domElement)
     
     // Lights
@@ -197,9 +198,9 @@ export default function RadioPlayer() {
   
   return (
     <div className="flex justify-center">
-      <div 
-        ref={containerRef} 
-        className="w-[750px] h-[500px] bg-white rounded-lg overflow-hidden"
+      <div
+        ref={containerRef}
+        className="w-[750px] h-[500px] rounded-lg overflow-hidden"
       >
         {isLoading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10">
