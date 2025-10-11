@@ -50,17 +50,12 @@ export default async function Page() {
                     <div className="absolute bottom-0 left-0 p-8 text-white">
                       <div className="mb-4">
                         <svg width="90" height="24" className="inline-block">
-                          <defs>
-                            <mask id="textMask-desktop-main">
-                              <rect width="100%" height="100%" fill="white" />
-                              <text x="45" y="15.5" textAnchor="middle" 
-                                    fontSize="11" fontWeight="bold" fill="black" letterSpacing="0.5px"
-                                    fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
-                                FEATURED
-                              </text>
-                            </mask>
-                          </defs>
-                          <rect width="100%" height="100%" fill="#bc2026" rx="3" mask="url(#textMask-desktop-main)" />
+                          <rect width="100%" height="100%" fill="#bc2026" rx="3" />
+                          <text x="45" y="15.5" textAnchor="middle"
+                                fontSize="11" fontWeight="bold" fill="white" letterSpacing="0.5px"
+                                fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
+                            FEATURED
+                          </text>
                         </svg>
                       </div>
                       <h1 className="text-4xl lg:text-5xl font-black leading-tight mb-4">
@@ -98,17 +93,12 @@ export default async function Page() {
                     <div className="absolute bottom-0 left-0 p-6 text-white">
                       <div className="mb-3">
                         <svg width="75" height="20" className="inline-block">
-                          <defs>
-                            <mask id="textMask-desktop-side">
-                              <rect width="100%" height="100%" fill="white" />
-                              <text x="37.5" y="13" textAnchor="middle" 
-                                    fontSize="9" fontWeight="bold" fill="black" letterSpacing="0.5px"
-                                    fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
-                                FEATURED
-                              </text>
-                            </mask>
-                          </defs>
-                          <rect width="100%" height="100%" fill="#bc2026" rx="2" mask="url(#textMask-desktop-side)" />
+                          <rect width="100%" height="100%" fill="#bc2026" rx="2" />
+                          <text x="37.5" y="13" textAnchor="middle"
+                                fontSize="9" fontWeight="bold" fill="white" letterSpacing="0.5px"
+                                fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
+                            FEATURED
+                          </text>
                         </svg>
                       </div>
                       <h2 className="text-xl font-bold leading-tight">

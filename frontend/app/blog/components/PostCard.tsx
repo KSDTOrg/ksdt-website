@@ -40,17 +40,12 @@ export default function PostCard({ post, isFeatured = false }: PostCardProps) {
           {isFeatured && (
             <div className="absolute top-2 left-2">
               <svg width="65" height="18" className="inline-block">
-                <defs>
-                  <mask id={`textMask-blog-${post._id}`}>
-                    <rect width="100%" height="100%" fill="white" />
-                    <text x="32.5" y="11.5" textAnchor="middle" 
-                          fontSize="8" fontWeight="bold" fill="black" letterSpacing="0.3px"
-                          fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
-                      FEATURED
-                    </text>
-                  </mask>
-                </defs>
-                <rect width="100%" height="100%" fill="#bc2026" rx="2" mask={`url(#textMask-blog-${post._id})`} />
+                <rect width="100%" height="100%" fill="#bc2026" rx="2" />
+                <text x="32.5" y="11.5" textAnchor="middle"
+                      fontSize="8" fontWeight="bold" fill="white" letterSpacing="0.3px"
+                      fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
+                  FEATURED
+                </text>
               </svg>
             </div>
           )}
