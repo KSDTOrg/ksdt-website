@@ -7,6 +7,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { href: "/music", label: "Music", disabled: true },
   { href: "/blog", label: "Blog", disabled: false },
+  { href: "/sports", label: "Sports", disabled: false },
   { href: "/booking", label: "Booking", disabled: true },
   { href: "/about", label: "About", disabled: false },
 ];
