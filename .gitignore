@@ -13,7 +13,7 @@ dist/
 
 # sanity
 .sanity/
-sanity/
+/sanity/
 
 # misc
 .DS_Store
