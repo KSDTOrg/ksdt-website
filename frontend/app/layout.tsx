@@ -2,7 +2,7 @@ import "./globals.css";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { draftMode } from "next/headers";
 import { VisualEditing, toPlainText } from "next-sanity";
 import { Toaster } from "sonner";
@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import DraftModeToast from "@/app/components/DraftModeToast";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
+import ViewportHeightFix from "@/app/components/ViewportHeightFix";
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { settingsQuery } from "@/sanity/lib/queries";
@@ -51,9 +52,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const alteHaasGrotesk = localFont({
+  src: [
+    {
+      path: "../public/fonts/AlteHaasGroteskRegular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/AlteHaasGroteskBold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-alte-haas-grotesk",
   display: "swap",
 });
 
@@ -65,24 +77,29 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en" className={`${inter.variable} bg-white text-black`}>
+    <html lang="en" className={`${alteHaasGrotesk.variable} bg-white text-black`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      </head>
       <body>
-        <section className="min-h-screen pt-24">
-          {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
-          <Toaster />
-          {isDraftMode && (
-            <>
-              <DraftModeToast />
-              {/*  Enable Visual Editing, only to be rendered when Draft Mode is enabled */}
-              <VisualEditing />
-            </>
-          )}
-          {/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
-          <SanityLive onError={handleError} />
-          <Header />
-          <main className="">{children}</main>
-          <Footer />
-        </section>
+        {/* Fix Safari mobile viewport height issues */}
+        <ViewportHeightFix />
+        {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
+        <Toaster />
+        {isDraftMode && (
+          <>
+            <DraftModeToast />
+            {/*  Enable Visual Editing, only to be rendered when Draft Mode is enabled */}
+            <VisualEditing />
+          </>
+        )}
+        {/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
+        <SanityLive onError={handleError} />
+        <Header />
+        <main className="">
+          <section className="min-h-screen">{children}</section>
+        </main>
+        {/* <Footer /> */}
         <SpeedInsights />
       </body>
     </html>

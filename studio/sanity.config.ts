@@ -5,8 +5,9 @@
 
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './src/schemaTypes'
+import Logo from './src/components/Logo'
+import {customTheme} from './src/theme'
 import {structure} from './src/structure'
 import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 import {
@@ -47,10 +48,37 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
 // Main Sanity configuration
 export default defineConfig({
   name: 'default',
-  title: 'Sanity + Next.js Starter Template',
+  title: 'KSDT Blog',
 
   projectId,
   dataset,
+
+  icon: Logo,
+
+  document: {
+    unstable_comments: {
+      enabled: true,
+    },
+  },
+
+  studio: {
+    components: {
+      layout: (props: any) => {
+        // Load custom fonts
+        if (typeof document !== 'undefined') {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = '/static/fonts.css';
+          if (!document.querySelector('link[href="/static/fonts.css"]')) {
+            document.head.appendChild(link);
+          }
+        }
+        return props.renderDefault(props);
+      },
+    },
+  },
+
+  theme: customTheme,
 
   plugins: [
     // Presentation tool configuration for Visual Editing
@@ -125,7 +153,6 @@ export default defineConfig({
     // Additional plugins for enhanced functionality
     unsplashImageAsset(),
     assist(),
-    visionTool(),
   ],
 
   // Schema configuration, imported from ./src/schemaTypes/index.ts

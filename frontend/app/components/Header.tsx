@@ -1,33 +1,93 @@
-import Link from "next/link";
-import { settingsQuery } from "@/sanity/lib/queries";
-import { sanityFetch } from "@/sanity/lib/live";
+"use client";
 
-export default async function Header() {
-  const { data: settings } = await sanityFetch({
-    query: settingsQuery,
-  });
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { navItems } from "@/lib/navigation";
+
+export default function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
-    <header className="fixed z-50 h-24 inset-0 bg-white/80 flex items-center backdrop-blur-lg">
-      <div className="container py-6 px-2 sm:px-6">
-        <div className="flex items-center justify-between gap-5">
-          <Link className="flex items-center gap-2" href="/">
-            <span className="text-lg sm:text-2xl pl-2 font-semibold">
-              {settings?.title || "KSDT Radio"}
-            </span>
+    <header className="fixed top-0 z-50 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between py-6">
+          {/* Logo */}
+          <Link className="flex items-center hover:opacity-70 transition-opacity" href="/">
+            <Image
+              src="/images/ksdt-logo-1.png"
+              alt="KSDT Radio"
+              width={120}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
-          <nav>
-            <ul
-              role="list"
-              className="flex items-center gap-4 md:gap-6 leading-5 text-xs sm:text-base tracking-tight font-mono"
-            >
-              <li>
-                <Link href="/about" className="hover:underline">
-                  About
+          {/* Navigation Menu */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              item.disabled ? (
+                <span 
+                  key={item.label}
+                  className="text-sm font-medium uppercase tracking-wide text-gray-400 cursor-not-allowed"
+                >
+                  {item.label}
+                </span>
+              ) : (
+                <Link 
+                  key={item.label}
+                  href={item.href} 
+                  className="text-sm font-medium uppercase tracking-wide hover:opacity-70 transition-opacity"
+                >
+                  {item.label}
                 </Link>
-              </li>
-            </ul>
+              )
+            ))}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden flex items-center justify-center w-10 h-10 relative z-50"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
+          >
+            <div className="space-y-1">
+              <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></div>
+              <div className={`w-6 h-0.5 bg-black transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
+            </div>
+          </button>
+        </div>
+
+        {/* Mobile Navigation Menu */}
+        <div className={`md:hidden transition-all duration-300 overflow-hidden ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}>
+          <nav className="py-4 space-y-4 border-t border-gray-100 bg-white/95">
+            {navItems.map((item) => (
+              item.disabled ? (
+                <span 
+                  key={item.label}
+                  className="block text-sm font-medium uppercase tracking-wide text-gray-400 cursor-not-allowed px-4 py-2"
+                >
+                  {item.label}
+                </span>
+              ) : (
+                <Link 
+                  key={item.label}
+                  href={item.href} 
+                  className="block text-sm font-medium uppercase tracking-wide hover:opacity-70 transition-opacity px-4 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              )
+            ))}
           </nav>
         </div>
       </div>

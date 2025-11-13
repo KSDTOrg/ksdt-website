@@ -34,7 +34,15 @@ export const post = defineType({
     defineField({
       name: 'content',
       title: 'Content',
-      type: 'blockContent',
+      type: 'array',
+      description: 'Add text, images, and galleries in any order',
+      of: [
+        {type: 'contentBlock'},
+        {type: 'imageBlock'},
+        {type: 'galleryBlock'},
+        {type: 'block'}, // Support old format - will be treated as one text block
+      ],
+      validation: (rule) => rule.required().min(1),
     }),
     defineField({
       name: 'excerpt',

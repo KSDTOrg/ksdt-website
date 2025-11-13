@@ -7,6 +7,7 @@ import Avatar from "@/app/components/Avatar";
 import CoverImage from "@/app/components/CoverImage";
 import { MorePosts } from "@/app/components/Posts";
 import PortableText from "@/app/components/PortableText";
+import PostContent from "@/app/components/PostContent";
 import { sanityFetch } from "@/sanity/lib/live";
 import { postPagesSlugs, postQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
@@ -72,8 +73,8 @@ export default async function PostPage(props: Props) {
 
   return (
     <>
-      <div className="">
-        <div className="container my-12 lg:my-24 grid gap-12">
+      <div className="pt-20">
+        <div className="container my-8 lg:my-16 grid gap-12">
           <div>
             <div className="pb-6 grid gap-6 mb-6 border-b border-gray-100">
               <div className="max-w-3xl flex flex-col gap-6">
@@ -96,10 +97,7 @@ export default async function PostPage(props: Props) {
                 )}
               </div>
               {post.content?.length && (
-                <PortableText
-                  className="max-w-2xl"
-                  value={post.content as PortableTextBlock[]}
-                />
+                <PostContent content={post.content} />
               )}
             </article>
           </div>
