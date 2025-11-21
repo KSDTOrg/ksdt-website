@@ -64,9 +64,9 @@ export default function MusicPage() {
 
       {/* Twitch and Radio.co Live Streams - Animates up when shelf is visible */}
       <motion.section
-        className="flex items-center justify-center z-0 flex-wrap gap-4 py-4"
+        className="flex items-center justify-center h-[calc(100vh-15rem)] z-0 flex-wrap gap-4 py-4"
         animate={{
-          y: isShelfVisible ? -300 : 0
+          y: isShelfVisible ? -600 : 0
         }}
         transition={springTransition}
       >
