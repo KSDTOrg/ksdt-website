@@ -4,7 +4,7 @@ export default function MusicPlayer() {
 
   return (
     <div className="h-full overflow-hidden relative">
-      <div className="absolute top-0 left-[5px] text-white">
+      <div className="absolute top-[1px] left-[5px] text-white">
         <a href="https://s4.radio.co/s2c33c7adb/listen">RADIO.CO STREAM</a>
       </div>
       <iframe
