@@ -66,7 +66,7 @@ export default function MusicPage() {
       <motion.section
         className="flex items-center justify-center h-[calc(100vh)] z-0 flex-wrap gap-4 py-4"
         animate={{
-          y: isShelfVisible ? '-95vh' : 0
+          y: isShelfVisible ? '-90vh' : 0
         }}
         transition={springTransition}
       >
