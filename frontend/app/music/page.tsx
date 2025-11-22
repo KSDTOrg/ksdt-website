@@ -71,8 +71,10 @@ export default function MusicPage() {
         transition={springTransition}
       >
         <TwitchPlayer />
-        <MusicPlayer />
-        <NowPlaying />
+        <div className="flex items-center justify-center flex-wrap gap-4 pb-4">
+          <MusicPlayer />
+          <NowPlaying />
+        </div>
       </motion.section>
 
       {/* Featured Albums Section - Slides up from bottom */}
