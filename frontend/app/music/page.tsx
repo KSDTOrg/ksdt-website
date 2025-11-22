@@ -66,7 +66,7 @@ export default function MusicPage() {
       <motion.section
         className="flex items-center justify-center h-[calc(100vh)] z-0 flex-wrap gap-4 py-4"
         animate={{
-          y: isShelfVisible ? -450 : 0
+          y: isShelfVisible ? '-95vh' : 0
         }}
         transition={springTransition}
       >
@@ -83,7 +83,7 @@ export default function MusicPage() {
         initial={{ y: "100%" }}
         animate={{ y: isShelfVisible ? 0 : "100%" }}
         transition={springTransition}
-        style={{ height: '45vh' }}
+        style={{ height: '60vh' }}
       >
         <div className="container mx-auto px-4 py-8 h-full">
           <Shelf showTitle={false} onLoadingChange={handleLoadingChange} />

@@ -127,7 +127,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
   const [isLoading, setIsLoading] = useState(true)
   const [albums] = useState<AlbumData[]>(propAlbums || FEATURED_ALBUMS)
   const windowSize = useWindowSize()
-  
+
   // Immediately enable the Discover button on mount
   useEffect(() => {
     onLoadingChange?.(false)
@@ -245,7 +245,7 @@ export default function Shelf({ title = "Featured Albums", albums: propAlbums, s
               coverUrl: albumData.coverUrl,
               position: {
                 x: startX + (i * albumSpacing),
-                y: 0.2,
+                y: 0,
                 z: backZ
               },
               scale: meshScale
