@@ -8,6 +8,8 @@ import TwitchPlayer from './components/TwitchPlayer'
 import MusicPlayer from './components/MusicPlayer'
 import NowPlaying from './components/NowPlaying'
 
+import '@/public/themes/ksdt_wi23.css'
+
 export default function MusicPage() {
   const [isShelfVisible, setIsShelfVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
