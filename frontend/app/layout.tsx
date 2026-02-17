@@ -99,7 +99,6 @@ export default async function RootLayout({
     <html lang="en" className={`${barlow.variable} bg-white text-black`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <link rel="stylesheet" href="/themes/ksdt_wi23.css" />
       </head>
       <body>
         {/* Fix Safari mobile viewport height issues */}
