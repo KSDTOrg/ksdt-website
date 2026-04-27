@@ -8,6 +8,7 @@ export const navItems: NavItem[] = [
   { href: "/music", label: "Music", disabled: false },
   { href: "/blog", label: "Blog", disabled: false },
   { href: "/sports", label: "Sports", disabled: false },
+  { href: "https://ksdtorg.github.io/ksdt-digital-library", label: "Library", disabled: false },
   { href: "/booking", label: "Booking", disabled: true },
   { href: "/about", label: "About", disabled: false },
 ];
