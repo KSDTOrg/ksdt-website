@@ -13,6 +13,25 @@
  */
 
 // Source: schema.json
+export type AboutMe = {
+  _type: "aboutMe";
+  profilePicture: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  name: string;
+  team: "Media" | "Computer Engineering" | "Creative Team" | "News Broadcasting Team" | "Events" | "Music" | "Marketing" | "Audio" | "Sports Broadcasting" | "Sports Marketing" | "Programming" | "General Manager" | "Office Manager";
+  bio: string;
+};
+
 export type CallToAction = {
   _type: "callToAction";
   heading: string;
@@ -78,6 +97,83 @@ export type InfoSection = {
   }>;
 };
 
+export type GalleryBlock = {
+  _type: "galleryBlock";
+  images: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
+  }>;
+  layout?: "grid" | "carousel" | "masonry";
+  columns?: 2 | 3 | 4;
+};
+
+export type ImageBlock = {
+  _type: "imageBlock";
+  image: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  alt: string;
+  caption?: string;
+  size?: "small" | "medium" | "large" | "full";
+  alignment?: "left" | "center" | "right";
+};
+
+export type ContentBlock = {
+  _type: "contentBlock";
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      linkType?: "href" | "page" | "post";
+      href?: string;
+      page?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "page";
+      };
+      post?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "post";
+      };
+      openInNewTab?: boolean;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+};
+
 export type BlockContent = Array<{
   children?: Array<{
     marks?: Array<string>;
@@ -110,6 +206,25 @@ export type BlockContent = Array<{
   _type: "block";
   _key: string;
 }>;
+
+export type Timeslot = {
+  _id: string;
+  _type: "timeslot";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  showName: string;
+  host?: string;
+  hostRef?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "person";
+  };
+  dayOfWeek: "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
+  startHour: number;
+  endHour: number;
+};
 
 export type Settings = {
   _id: string;
@@ -180,7 +295,9 @@ export type Page = {
     _key: string;
   } & CallToAction | {
     _key: string;
-  } & InfoSection>;
+  } & InfoSection | {
+    _key: string;
+  } & AboutMe>;
 };
 
 export type Post = {
@@ -191,7 +308,30 @@ export type Post = {
   _rev: string;
   title: string;
   slug: Slug;
-  content?: BlockContent;
+  content: Array<{
+    _key: string;
+  } & ContentBlock | {
+    _key: string;
+  } & ImageBlock | {
+    _key: string;
+  } & GalleryBlock | {
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
   excerpt?: string;
   coverImage: {
     asset?: {
@@ -477,7 +617,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = CallToAction | Link | InfoSection | BlockContent | Settings | Page | Post | Person | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = AboutMe | CallToAction | Link | InfoSection | GalleryBlock | ImageBlock | ContentBlock | BlockContent | Timeslot | Settings | Page | Post | Person | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -546,6 +686,24 @@ export type GetPageQueryResult = {
   heading: string;
   subheading: string | null;
   pageBuilder: Array<{
+    _key: string;
+    _type: "aboutMe";
+    profilePicture: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    name: string;
+    team: "Audio" | "Computer Engineering" | "Creative Team" | "Events" | "General Manager" | "Marketing" | "Media" | "Music" | "News Broadcasting Team" | "Office Manager" | "Programming" | "Sports Broadcasting" | "Sports Marketing";
+    bio: string;
+  } | {
     _key: string;
     _type: "callToAction";
     heading: string;
@@ -692,18 +850,76 @@ export type PostQueryResult = {
     style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
     listItem?: "bullet" | "number";
     markDefs: Array<{
-      linkType?: "href" | "page" | "post";
       href?: string;
-      page: string | null;
-      post: string | null;
-      openInNewTab?: boolean;
       _type: "link";
       _key: string;
+      page: null;
+      post: null;
     }> | null;
     level?: number;
     _type: "block";
     _key: string;
-  }> | null;
+  } | {
+    _key: string;
+    _type: "contentBlock";
+    content: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+      listItem?: "bullet" | "number";
+      markDefs: Array<{
+        linkType?: "href" | "page" | "post";
+        href?: string;
+        page: string | null;
+        post: string | null;
+        openInNewTab?: boolean;
+        _type: "link";
+        _key: string;
+      }> | null;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }>;
+  } | {
+    _key: string;
+    _type: "galleryBlock";
+    images: Array<{
+      _key: string;
+      asset: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      } | null;
+      alt: string;
+      caption: string | null;
+    }>;
+    layout: "carousel" | "grid" | "masonry" | null;
+    columns: 2 | 3 | 4 | null;
+  } | {
+    _key: string;
+    _type: "imageBlock";
+    image: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    alt: string;
+    caption: string | null;
+    size: "full" | "large" | "medium" | "small" | null;
+    alignment: "center" | "left" | "right" | null;
+  }>;
   _id: string;
   status: "draft" | "published";
   title: string;
@@ -751,6 +967,21 @@ export type PostPagesSlugsResult = Array<{
 export type PagesSlugsResult = Array<{
   slug: string;
 }>;
+// Variable: timeslotsQuery
+// Query: *[_type == "timeslot"] | order(dayOfWeek asc, startHour asc) {    _id,    showName,    host,    "hostRef": hostRef->{ _id, firstName, lastName },    dayOfWeek,    startHour,    endHour  }
+export type TimeslotsQueryResult = Array<{
+  _id: string;
+  showName: string;
+  host: string | null;
+  hostRef: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  } | null;
+  dayOfWeek: "fri" | "mon" | "sat" | "sun" | "thu" | "tue" | "wed";
+  startHour: number;
+  endHour: number;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -764,5 +995,6 @@ declare module "@sanity/client" {
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content[]{\n      ...,\n      _type == \"block\" => {\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == \"link\" => {\n    \"page\": page->slug.current,\n    \"post\": post->slug.current\n  }\n\n        }\n      },\n      _type == \"contentBlock\" => {\n        _type,\n        _key,\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == \"link\" => {\n    \"page\": page->slug.current,\n    \"post\": post->slug.current\n  }\n\n          }\n        }\n      },\n      _type == \"imageBlock\" => {\n        _type,\n        _key,\n        image,\n        alt,\n        caption,\n        size,\n        alignment\n      },\n      _type == \"galleryBlock\" => {\n        _type,\n        _key,\n        images[]{\n          _key,\n          asset,\n          alt,\n          caption\n        },\n        layout,\n        columns\n      }\n    },\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": PostQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
+    "\n  *[_type == \"timeslot\"] | order(dayOfWeek asc, startHour asc) {\n    _id,\n    showName,\n    host,\n    \"hostRef\": hostRef->{ _id, firstName, lastName },\n    dayOfWeek,\n    startHour,\n    endHour\n  }\n": TimeslotsQueryResult;
   }
 }

@@ -130,3 +130,14 @@ export const pagesSlugs = defineQuery(`
   *[_type == "page" && defined(slug.current)]
   {"slug": slug.current}
 `);
+
+export const timeslotsQuery = defineQuery(`
+  *[_type == "timeslot"] | order(dayOfWeek asc, startHour asc) {
+    _id,
+    showName,
+    host,
+    dayOfWeek,
+    startHour,
+    endHour
+  }
+`);
