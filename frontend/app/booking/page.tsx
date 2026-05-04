@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 }
 
 export default function BookingPage() {
-  const calendarId = process.env.GOOGLE_CALENDAR_ID;
+  const calendarId = "c_f990822a8e6c4ace1fee94f99663e7c65ff05d4fae019006a0269567ba8ebd86@group.calendar.google.com";
   const calendarSrc = calendarId
     ? `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(calendarId)}&ctz=${encodeURIComponent('America/Los_Angeles')}`
     : null;
@@ -20,7 +20,7 @@ export default function BookingPage() {
               BOOKING
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl">
-              Get in touch with us to book events, shows, or collaborations with KSDT Radio.
+              Get in touch with us to book the studio and practice room, as well as events, shows, or collaborations with KSDT Radio.
             </p>
           </div>
 
