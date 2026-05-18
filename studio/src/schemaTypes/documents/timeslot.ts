@@ -27,7 +27,7 @@ export const timeslot = defineType({
       name: 'host',
       title: 'Host Name',
       description:
-        'Optional. Display name of the host. Leave blank for shows without a named host (e.g. "Open Booth").',
+        'Display name of the host. Leave blank for shows without a named host (ex. "Open Booth").',
       type: 'string',
     }),
     defineField({
@@ -39,15 +39,15 @@ export const timeslot = defineType({
     }),
     defineField({
       name: 'startHour',
-      title: 'Start Hour (0–23, LA time)',
-      description: '0 = midnight, 13 = 1pm, 23 = 11pm.',
+      title: 'Start Hour (0–23 Military Time)',
+      description: '12 means "starts at noon/12 pm", 10 means "starts at 10 pm", 0 = midnight, 13 = 1pm, 23 = 11pm.',
       type: 'number',
       validation: (rule) => rule.required().integer().min(0).max(23),
     }),
     defineField({
       name: 'endHour',
-      title: 'End Hour (1–24, LA time)',
-      description: 'Exclusive upper bound. 12 means "ends at noon", 24 means "ends at midnight".',
+      title: 'End Hour (1-24 Military Time)',
+      description: '12 means "ends at noon", 24 means "ends at midnight".',
       type: 'number',
       validation: (rule) =>
         rule
@@ -58,7 +58,7 @@ export const timeslot = defineType({
           .custom((endHour, context) => {
             const start = (context.document?.startHour as number | undefined) ?? 0
             if (typeof endHour === 'number' && endHour <= start) {
-              return 'End hour must be greater than start hour.'
+              return 'End hour must be larger than start hour.'
             }
             return true
           }),

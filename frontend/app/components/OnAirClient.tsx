@@ -29,6 +29,8 @@ const WEEKDAY_TO_KEY: Record<string, NonNullable<Slot['dayOfWeek']>> = {
   Sat: 'sat',
 }
 
+// helper functions for calculating current on air dj
+
 function getStationNow(date: Date = new Date()): {
   day: NonNullable<Slot['dayOfWeek']>
   hour: number
@@ -87,26 +89,19 @@ function msUntilNextHour(now: Date = new Date()): number {
 export default function OnAirClient({ schedule }: { schedule: Schedule }) {
   const [current, setCurrent] = useState<Slot | null>(() => {
     const { day, hour } = getStationNow()
-    console.log('[OnAir] schedule:', schedule)
-    console.log('[OnAir] now:', { day, hour })
     const slot = findCurrentSlot(schedule, day, hour)
-    console.log('[OnAir] matched slot:', slot)
     return slot
   })
 
+  // hook that will execute every hour to update on air DJ
   useEffect(() => {
     const recompute = () => {
       const { day, hour } = getStationNow()
       const slot = findCurrentSlot(schedule, day, hour)
-      console.log('[OnAir] recompute:', { day, hour, slot })
       setCurrent(slot)
     }
 
-    // Always recompute on mount in case the initial SSR/hydration value is stale.
-    recompute()
-
     let timerId: ReturnType<typeof setTimeout> | null = null
-
     const scheduleNext = () => {
       timerId = setTimeout(() => {
         recompute()
@@ -133,7 +128,7 @@ export default function OnAirClient({ schedule }: { schedule: Schedule }) {
   if (!current) {
     return (
       <div className="inline-flex flex-col gap-1">
-        <span className="text-2xl font-black text-black">Off air</span>
+        <span className="text-2xl font-black text-black">Off Air</span>
       </div>
     )
   }

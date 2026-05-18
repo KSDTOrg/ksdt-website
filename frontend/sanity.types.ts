@@ -968,16 +968,11 @@ export type PagesSlugsResult = Array<{
   slug: string;
 }>;
 // Variable: timeslotsQuery
-// Query: *[_type == "timeslot"] | order(dayOfWeek asc, startHour asc) {    _id,    showName,    host,    "hostRef": hostRef->{ _id, firstName, lastName },    dayOfWeek,    startHour,    endHour  }
+// Query: *[_type == "timeslot"] | order(dayOfWeek asc, startHour asc) {    _id,    showName,    host,    dayOfWeek,    startHour,    endHour  }
 export type TimeslotsQueryResult = Array<{
   _id: string;
   showName: string;
   host: string | null;
-  hostRef: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-  } | null;
   dayOfWeek: "fri" | "mon" | "sat" | "sun" | "thu" | "tue" | "wed";
   startHour: number;
   endHour: number;
@@ -995,6 +990,6 @@ declare module "@sanity/client" {
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content[]{\n      ...,\n      _type == \"block\" => {\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == \"link\" => {\n    \"page\": page->slug.current,\n    \"post\": post->slug.current\n  }\n\n        }\n      },\n      _type == \"contentBlock\" => {\n        _type,\n        _key,\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == \"link\" => {\n    \"page\": page->slug.current,\n    \"post\": post->slug.current\n  }\n\n          }\n        }\n      },\n      _type == \"imageBlock\" => {\n        _type,\n        _key,\n        image,\n        alt,\n        caption,\n        size,\n        alignment\n      },\n      _type == \"galleryBlock\" => {\n        _type,\n        _key,\n        images[]{\n          _key,\n          asset,\n          alt,\n          caption\n        },\n        layout,\n        columns\n      }\n    },\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{firstName, lastName, picture},\n\n  }\n": PostQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PostPagesSlugsResult;
     "\n  *[_type == \"page\" && defined(slug.current)]\n  {\"slug\": slug.current}\n": PagesSlugsResult;
-    "\n  *[_type == \"timeslot\"] | order(dayOfWeek asc, startHour asc) {\n    _id,\n    showName,\n    host,\n    \"hostRef\": hostRef->{ _id, firstName, lastName },\n    dayOfWeek,\n    startHour,\n    endHour\n  }\n": TimeslotsQueryResult;
+    "\n  *[_type == \"timeslot\"] | order(dayOfWeek asc, startHour asc) {\n    _id,\n    showName,\n    host,\n    dayOfWeek,\n    startHour,\n    endHour\n  }\n": TimeslotsQueryResult;
   }
 }
