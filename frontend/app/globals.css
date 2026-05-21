@@ -13,7 +13,7 @@
   --color-framework: #000;
   --color-black: #000000;
   --color-white: #ffffff;
-  --color-brand: #bc2026;
+  --color-brand: #FF8DCA;
   --color-blue: #0052ff;
   --color-yellow: #cdea19;
   --color-gray-50: #f9f9f9;
@@ -70,11 +70,11 @@ a {
 
 /* KSDT Brand Colors */
 .bg-brand-red {
-  background-color: #bc2026 !important;
+  background-color: #FF8DCA !important;
 }
 
 .text-brand-red {
-  color: #bc2026 !important;
+  color: #FF8DCA !important;
 }
 
 /* Ensure the header sticks to the very top */

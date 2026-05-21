@@ -40,7 +40,7 @@ export default function PostCard({ post, isFeatured = false }: PostCardProps) {
           {isFeatured && (
             <div className="absolute top-2 left-2">
               <svg width="65" height="18" className="inline-block">
-                <rect width="100%" height="100%" fill="#bc2026" rx="2" />
+                <rect width="100%" height="100%" fill="#FF8DCA" rx="2" />
                 <text x="32.5" y="11.5" textAnchor="middle"
                       fontSize="8" fontWeight="bold" fill="white" letterSpacing="0.3px"
                       // fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
@@ -54,7 +54,7 @@ export default function PostCard({ post, isFeatured = false }: PostCardProps) {
 
         {/* YouTube-style Content */}
         <div className="flex-1 min-w-0">
-          <h2 className="text-base font-semibold text-black leading-tight group-hover:text-red-500 transition-colors duration-200 line-clamp-2 mb-2">
+          <h2 className="text-base font-semibold text-black leading-tight group-hover:text-red-350 transition-colors duration-200 line-clamp-2 mb-2">
             {post.title}
           </h2>
           

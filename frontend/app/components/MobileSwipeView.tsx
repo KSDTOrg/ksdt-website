@@ -60,7 +60,7 @@ export default function MobileSwipeView({ posts }: MobileSwipeViewProps) {
               {isFeatured && (
                 <div className="mb-4">
                   <svg width="90" height="24" className="inline-block">
-                    <rect width="100%" height="100%" fill="#bc2026" rx="3" />
+                    <rect width="100%" height="100%" fill="#FF8DCA" rx="3" />
                     <text x="45" y="15.5" textAnchor="middle"
                           fontSize="11" fontWeight="bold" fill="white" letterSpacing="0.5px"
                           // fontFamily="var(--font-alte-haas-grotesk), Arial, sans-serif">
