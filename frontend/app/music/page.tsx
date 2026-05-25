@@ -46,7 +46,7 @@ export default function MusicPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 pt-32 h-screen relative">
+    <div className="container mx-auto px-4 h-screen relative">
       {/* Discover Button - Fixed position */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
         <button
