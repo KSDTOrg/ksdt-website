@@ -29,9 +29,8 @@ const WEEKDAY_TO_KEY: Record<string, NonNullable<Slot['dayOfWeek']>> = {
   Sat: 'sat',
 }
 
-// helper functions for calculating current on air dj
-
-function getStationNow(date: Date = new Date()): {
+// Helper functions for calculating activeSlot on air dj
+function getStationTime(date: Date = new Date()): {
   day: NonNullable<Slot['dayOfWeek']>
   hour: number
 } {
@@ -50,7 +49,7 @@ function getStationNow(date: Date = new Date()): {
   return { day: WEEKDAY_TO_KEY[weekday] ?? 'sun', hour }
 }
 
-function findCurrentSlot(
+function getActiveSlot(
   schedule: Schedule,
   day: NonNullable<Slot['dayOfWeek']>,
   hour: number
@@ -87,34 +86,34 @@ function msUntilNextHour(now: Date = new Date()): number {
 }
 
 export default function OnAirClient({ schedule }: { schedule: Schedule }) {
-  const [current, setCurrent] = useState<Slot | null>(() => {
-    const { day, hour } = getStationNow()
-    const slot = findCurrentSlot(schedule, day, hour)
-    return slot
+  const [activeSlot, setActiveSlot] = useState<Slot | null>(() => {
+    const { day, hour } = getStationTime()
+    const activeSlot = getActiveSlot(schedule, day, hour)
+    return activeSlot
   })
 
   // hook that will execute every hour to update on air DJ
   useEffect(() => {
-    const recompute = () => {
-      const { day, hour } = getStationNow()
-      const slot = findCurrentSlot(schedule, day, hour)
-      setCurrent(slot)
+    const updateActiveSlot = () => {
+      const { day, hour } = getStationTime()
+      const activeSlot = getActiveSlot(schedule, day, hour)
+      setActiveSlot(activeSlot)
     }
 
     let timerId: ReturnType<typeof setTimeout> | null = null
-    const scheduleNext = () => {
+    const scheduleNextUpdate = () => {
       timerId = setTimeout(() => {
-        recompute()
-        scheduleNext()
+        updateActiveSlot()
+        scheduleNextUpdate()
       }, msUntilNextHour())
     }
-    scheduleNext()
+    scheduleNextUpdate()
 
     const onVisibility = () => {
       if (document.visibilityState === 'visible') {
-        recompute()
+        updateActiveSlot()
         if (timerId) clearTimeout(timerId)
-        scheduleNext()
+        scheduleNextUpdate()
       }
     }
     document.addEventListener('visibilitychange', onVisibility)
@@ -125,7 +124,7 @@ export default function OnAirClient({ schedule }: { schedule: Schedule }) {
     }
   }, [schedule])
 
-  if (!current) {
+  if (!activeSlot) {
     return (
       <div className="inline-flex flex-col gap-1">
         <span className="text-2xl font-black text-black">Off Air</span>
@@ -133,15 +132,15 @@ export default function OnAirClient({ schedule }: { schedule: Schedule }) {
     )
   }
 
-  const hostName = current.host?.trim() ?? ''
+  const hostName = activeSlot.host?.trim() ?? ''
 
   return (
     <div className="inline-flex flex-col gap-1">
       <span className="text-xs font-bold uppercase tracking-widest text-[#bc2026]">On Air</span>
-      <span className="text-2xl font-black text-black">{current.showName ?? 'Untitled'}</span>
+      <span className="text-2xl font-black text-black">{activeSlot.showName ?? 'Untitled'}</span>
       {hostName && <span className="text-sm text-gray-700">{hostName}</span>}
       <span className="text-xs uppercase tracking-wide text-gray-500">
-        {formatTimeslot(current)}
+        {formatTimeslot(activeSlot)}
       </span>
     </div>
   )
