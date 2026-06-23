@@ -7,8 +7,8 @@ import { draftMode } from "next/headers";
 import { VisualEditing, toPlainText } from "next-sanity";
 import { Toaster } from "sonner";
 
+import ClientLayout from "@/app/components/ClientLayout";
 import DraftModeToast from "@/app/components/DraftModeToast";
-import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 import ViewportHeightFix from "@/app/components/ViewportHeightFix";
 import * as demo from "@/sanity/lib/demo";
@@ -100,7 +100,7 @@ export default async function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body>
+      <body className="flex flex-col min-h-screen">
         {/* Fix Safari mobile viewport height issues */}
         <ViewportHeightFix />
         {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
@@ -115,10 +115,7 @@ export default async function RootLayout({
         {/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
         <SanityLive onError={handleError} />
         <Header />
-        <main className="">
-          <section className="min-h-screen">{children}</section>
-        </main>
-        <Footer />
+        <ClientLayout>{children}</ClientLayout>
         <SpeedInsights />
       </body>
     </html>

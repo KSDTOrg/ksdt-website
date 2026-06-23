@@ -16,7 +16,7 @@ const footerLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 relative">
+    <footer className="bg-gray-50">
       <div className="container relative mx-auto px-6 py-12">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-center">
           <div className="flex justify-center space-x-6 md:justify-start md:order-1">
@@ -42,7 +42,7 @@ export default function Footer() {
           <p className="text-sm font-medium text-zinc-600 text-center md:text-right md:order-2">
             © {new Date().getFullYear()} KSDT Radio
           </p>
-
+            
         </div>
       </div>
     </footer>
