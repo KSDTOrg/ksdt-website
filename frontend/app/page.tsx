@@ -6,6 +6,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { allPostsQuery } from "@/sanity/lib/queries";
 import { AllPostsQueryResult } from "@/sanity.types";
 import ClientMobileWrapper from "./components/ClientMobileWrapper";
+import OnAir from "./components/OnAir";
 
 import './globals.css';
 
@@ -28,6 +29,9 @@ export default async function Page() {
       {/* Hero Section - The Face Style */}
       <section className="pt-38 pb-16">
         <div className="container mx-auto px-4">
+          <div className="mb-8">
+            <OnAir/>
+          </div>
           {/* Featured Articles Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
             {/* Main Feature Article */}

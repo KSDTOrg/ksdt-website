@@ -101,7 +101,7 @@ export default function MobileSwipeView({ posts }: MobileSwipeViewProps) {
       {/* Mobile Header - Transparent for homepage */}
       <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/40 to-transparent">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-6">
+          <div className="flex items-center justify-between py-4">
             {/* Logo - Same as desktop */}
             <Link className="flex items-center hover:opacity-70 transition-opacity" href="/">
               <Image
@@ -110,7 +110,7 @@ export default function MobileSwipeView({ posts }: MobileSwipeViewProps) {
                 alt="KSDT Radio"
                 width={200}
                 height={200}
-                className="h-20 w-auto"
+                className="h-24 w-auto"
                 priority
               />
             </Link>

@@ -18,6 +18,10 @@ export const client = createClient({
       if (props.sourcePath.at(-1) === "title") {
         return true;
       }
+      // dayOfWeek is used for string comparison in logic, not display — stega would corrupt it
+      if (props.sourcePath.at(-1) === "dayOfWeek") {
+        return false;
+      }
 
       return props.filterDefault(props);
     },

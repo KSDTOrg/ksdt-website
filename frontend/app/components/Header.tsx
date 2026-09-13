@@ -15,7 +15,7 @@ export default function Header() {
   return (
     <header className="fixed top-0 z-50 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-6">
+        <div className="flex items-center justify-between py-2">
           {/* Logo */}
           <Link className="flex items-center hover:opacity-70 transition-opacity" href="/">
             <Image
@@ -26,7 +26,7 @@ export default function Header() {
               height={200}
               // below h-x is lever to control size of header
               // Currently hard-coded, a more capable person should make it not hard coded
-              className="h-20 w-auto"
+              className="h-24 w-auto"
               priority
             />
           </Link>
@@ -37,7 +37,7 @@ export default function Header() {
               item.disabled ? (
                 <span 
                   key={item.label}
-                  className="text-sm font-medium uppercase tracking-wide text-gray-400 cursor-not-allowed"
+                  className="text-base font-medium uppercase tracking-wide text-gray-400 cursor-not-allowed"
                 >
                   {item.label}
                 </span>
@@ -45,7 +45,7 @@ export default function Header() {
                 <Link 
                   key={item.label}
                   href={item.href} 
-                  className="text-sm font-medium uppercase tracking-wide hover:opacity-70 transition-opacity"
+                  className="text-base font-medium uppercase tracking-wide hover:opacity-70 transition-opacity"
                 >
                   {item.label}
                 </Link>
@@ -76,7 +76,7 @@ export default function Header() {
               item.disabled ? (
                 <span 
                   key={item.label}
-                  className="block text-sm font-medium uppercase tracking-wide text-gray-400 cursor-not-allowed px-4 py-2"
+                  className="block text-lg font-medium uppercase tracking-wide text-gray-400 cursor-not-allowed px-4 py-2"
                 >
                   {item.label}
                 </span>
@@ -84,7 +84,7 @@ export default function Header() {
                 <Link 
                   key={item.label}
                   href={item.href} 
-                  className="block text-sm font-medium uppercase tracking-wide hover:opacity-70 transition-opacity px-4 py-2"
+                  className="block text-lg font-medium uppercase tracking-wide hover:opacity-70 transition-opacity px-4 py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
