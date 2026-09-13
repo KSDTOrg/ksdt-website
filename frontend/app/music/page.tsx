@@ -7,33 +7,11 @@ import Shelf from './components/Shelf'
 import TwitchPlayer from './components/TwitchPlayer'
 import MusicPlayer from './components/MusicPlayer'
 import NowPlaying from './components/NowPlaying'
+import Footer from '../components/Footer'
 
 export default function MusicPage() {
   const [isShelfVisible, setIsShelfVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    // Manage scroll on visible album shelf
-    if (isShelfVisible) {
-        document.body.classList.add('no-scroll');
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
-    } else {
-        document.body.classList.remove('no-scroll');
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-
-    // Cleanup: Re-enable scrolling if component unmounts while 
-    // the shelf is visible (e.g., changing routes).
-    return () => {
-        document.body.classList.remove('no-scroll');
-    };
-  }, [isShelfVisible]);
 
   const handleLoadingChange = (loading: boolean) => {
     setIsLoading(loading)
@@ -46,7 +24,7 @@ export default function MusicPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 h-screen relative">
+    <div className="w-full">
       {/* Discover Button - Fixed position */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
         <button
@@ -64,12 +42,7 @@ export default function MusicPage() {
 
       {/* Twitch and Radio.co Live Streams - Animates up when shelf is visible */}
       <motion.section
-        className="flex items-center justify-center h-[calc(100vh)] z-0 flex-wrap gap-4 py-4"
-        animate={{
-          y: isShelfVisible ? '-90vh' : 0
-        }}
-        transition={springTransition}
-      >
+        className="container mx-auto px-4 pt-32 flex items-center justify-center z-0 flex-wrap gap-4 py-4">
         <TwitchPlayer />
         <div className="flex items-center justify-center flex-wrap gap-4 pb-4">
           <MusicPlayer />
@@ -77,9 +50,9 @@ export default function MusicPage() {
         </div>
       </motion.section>
 
-      {/* Featured Albums Section - Slides up from bottom */}
+      {/* Featured Albums Section - Slides up from bottom, over the embeds */}
       <motion.section
-        className="fixed bottom-0 left-0 right-0 z-10"
+        className="fixed bottom-0 left-0 right-0 z-10 bg-white"
         initial={{ y: "100%" }}
         animate={{ y: isShelfVisible ? 0 : "100%" }}
         transition={springTransition}
@@ -89,6 +62,9 @@ export default function MusicPage() {
           <Shelf showTitle={false} onLoadingChange={handleLoadingChange} />
         </div>
       </motion.section>
+
+      {/* Page-specific Footer, always at the bottom */}
+      <Footer />
     </div>
   )
 }
